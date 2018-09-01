@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="wr">
+<head>
+    <meta charset="UTF-8">
+    <title>five weather report</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular.min.js"
+            type="application/javascript"></script>
+    <script>
+        var app = angular.module('wr', []);
+        app.controller('giveresult', function ($scope, $http) {
+            var results = [];
+            $scope.wr = function () {
+                var sc = document.getElementById("sc").value;
+                var cn = document.getElementById("cn").value;
+                $http.get('http://api.wunderground.com/api/4bbbc25f4f5946dd/hourly/q/'+ sc +'/'+ cn +'.json').success(function (response) {
+                    $scope.result = response["hourly_forecast"];
+                })
+            }
+        });
+    </script>
+</head>
+<body>
+<div ng-controller="giveresult">
+    <div class="container">
+        <form>
+            <br/>
+            <br/>
+            <div class="col-sm-4">
+                <label class="sr-only">STATE CODE:</label>
+                <input id="sc" type="text" class="form-control" placeholder="STATE CODE" ng-model="sc">
+            </div>
+
+            <div class="col-sm-4">
+                <label class="sr-only">CITY NAME</label>
+                <input id="cn" type="text" class="form-control" placeholder="CITY NAME" ng-model="cn">
+            </div>
+
+            <div class="col-sm-4">
+                <button id="btn" type="button" class="btn btn-primary form-control" ng-click="wr()">Give Report</button>
+            </div>
+        </form>
+        <br/>
+        </br>
+        <div  ng-repeat="obj in result|limitTo : 5">
+            <div class="col-sm-3">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        Condition : {{ obj.condition }}<br/>
+                        Temp : {{ obj.temp.english }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
